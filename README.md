@@ -17,7 +17,7 @@ node index.js
 
 运行示例：
 
-(http://github.com/upliu/FuckHosts/raw/master/example.png)
+![image](http://github.com/upliu/FuckHosts/raw/master/example.png)
 
 ###@todo
 - 代理转发
