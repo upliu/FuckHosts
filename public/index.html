@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>FuckHosts</title>
+    <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .text {
+            font-size: 16px;
+            padding: 5px;
+        }
+        .group input {
+            font-weight: bold;
+            font-size: 24px;
+            border: none;
+        }
+        .menu {
+            width: 160px;
+            position: fixed;
+            top: 8px;
+            left: 8px;
+        }
+        .main {
+            margin-left: 170px;
+            padding: 8px;
+        }
+    </style>
+    <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/vue/2.1.4/vue.min.js"></script>
+    <script src="//cdn.bootcss.com/autosize.js/3.0.19/autosize.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <div class="menu">
+        <p>
+            <button v-on:click="save" class="btn btn-primary btn-sm">保存</button>
+            <button v-on:click="add" class="btn btn-success btn-xs">添加</button>
+        </p>
+        <p v-for="group in hostMap">
+            <label><input type="checkbox" v-model="group.checked" v-on:change="save"> {{ group.name }}</label>
+        </p>
+        <p class="alert alert-info">
+            勾选或取消会自动保存设置，编辑 host 需手动点击保存
+        </p>
+    </div>
+
+    <div class="main">
+        <div id="hostMap1">
+            <div v-for="(group, index) in hostMap">
+                <p class="group">
+                    <input type="checkbox" v-model="group.checked">
+                    <input type="text" v-model="group.name">
+                    <button v-on:click="remove(index)" class="btn btn-danger btn-xs">删除</button>
+                </p>
+                <textarea class="text" style="width: 100%" v-model="group.text"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            hostMap: []
+        },
+        methods: {
+            save: function () {
+                $.ajax('/hosts', {
+                    data: JSON.stringify(this.hostMap),
+                    contentType: 'application/json',
+                    type: 'POST',
+                    success: function (resp) {
+                        console.log(resp)
+                    }
+                })
+            }
+            ,add: function () {
+                this.hostMap.push({
+                    name:'',
+                    checked: 0,
+                    text: ''
+                })
+            }
+            ,remove: function (index) {
+                if (confirm('确定删除？')) {
+                    this.hostMap.splice(index, 1)
+                }
+            }
+        },
+        mounted: function () {
+            var vm = this
+            $.get('/hosts', function (hostMap) {
+                vm.hostMap = hostMap
+            })
+        },
+        updated: function () {
+            autosize($('.text'))
+        }
+    })
+</script>
+</html>
