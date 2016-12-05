@@ -15,6 +15,10 @@ node index.js
 
 打开网址 https://127.0.0.1:8891 进行 host 配置
 
+运行示例：
+
+(http://github.com/upliu/FuckHosts/raw/master/example.png)
+
 ###@todo
 - 代理转发
 - 错误处理
