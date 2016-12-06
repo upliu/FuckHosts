@@ -34,11 +34,11 @@ console.log(ip, req.url)
         }
     };
     proxy.web(req, res, proxyOptions)
-}).listen(PORT)
 
-proxy.on('error', function (err, req, res) {
-    console.err('Something went wrong.' . err)
-});
+    proxy.on('error', function (err, req, res) {
+        console.log('Something went wrong.' . err)
+    });
+}).listen(PORT)
 
 // 转发 https 请求
 // directly forward https request
